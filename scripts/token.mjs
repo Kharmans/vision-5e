@@ -55,6 +55,11 @@ export default (Token) => class extends Token {
             return false;
         }
 
+        // Only tokens in the viewed level can see
+        if (game.release.generation >= 14 && this.document.level !== canvas.level.id) {
+            return false;
+        }
+
         const isGM = game.user.isGM;
 
         // Only display hidden tokens for the GM
