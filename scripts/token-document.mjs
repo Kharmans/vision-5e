@@ -68,22 +68,24 @@ export default (TokenDocument) => class extends TokenDocument {
         if (mode && mode.enabled && mode.range > 0) {
             this.sight.range = mode.range;
             this.sight.detectionMode = detectionMode;
-        } else {
-            this.sight.range = 0;
-            this.sight.visionMode = "basic";
-            this.sight.detectionMode = "basicSight";
 
-            for (const [visionMode, detectionMode] of Object.entries(VISION_TO_DETECTION_MODE_MAPPING)) {
-                const mode = this._getDetectionMode(detectionMode);
+            return;
+        }
 
-                if (!mode || !mode.enabled || this.sight.range >= mode.range) {
-                    continue;
-                }
+        this.sight.range = 0;
+        this.sight.visionMode = "basic";
+        this.sight.detectionMode = "basicSight";
 
-                this.sight.range = mode.range;
-                this.sight.visionMode = visionMode;
-                this.sight.detectionMode = detectionMode;
+        for (const [visionMode, detectionMode] of Object.entries(VISION_TO_DETECTION_MODE_MAPPING)) {
+            const mode = this._getDetectionMode(detectionMode);
+
+            if (!mode || !mode.enabled || this.sight.range >= mode.range) {
+                continue;
             }
+
+            this.sight.range = mode.range;
+            this.sight.visionMode = visionMode;
+            this.sight.detectionMode = detectionMode;
         }
 
         if (this.sight.visionMode === "basic") {
@@ -98,9 +100,9 @@ export default (TokenDocument) => class extends TokenDocument {
 
             this.sight.color = color !== undefined ? color : this._source.sight.color !== null ? foundry.utils.Color.from(this._source.sight.color) : null;
             this.sight.attenuation = attenuation !== undefined ? attenuation : this._source.sight.attenuation;
-            this.sight.brightness = brightness !== undefined ? brightness : 0;
-            this.sight.saturation = saturation !== undefined ? saturation : 0;
-            this.sight.contrast = contrast !== undefined ? contrast : 0;
+            this.sight.brightness = brightness !== undefined ? brightness : this._source.sight.brightness;
+            this.sight.saturation = saturation !== undefined ? saturation : this._source.sight.saturation;
+            this.sight.contrast = contrast !== undefined ? contrast : this._source.sight.contrast;
         }
     }
 
